@@ -73,6 +73,7 @@ function Box() {
 
 export default function App() {
   useEffect(() => {
+
     requestCameraPermission();
   }, []);
   return (
