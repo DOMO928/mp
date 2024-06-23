@@ -153,7 +153,7 @@ export class ARNft {
       }
       case 'lost': {
         //   console.log('lost', msg);
-        this.onLost(msg);
+        this.onLost();
         break;
       }
       case 'processNext': {
@@ -184,7 +184,7 @@ export class ARNft {
     });
   }
 
-  onLost(msg: any) {
+  onLost() {
     this.markers.forEach((marker: { root: { visible: boolean } }) => {
       marker.root.visible = false;
     });

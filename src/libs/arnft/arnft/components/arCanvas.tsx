@@ -12,24 +12,30 @@ function ARCanvas({ arEnabled = true, interpolationFactor = 1, children, ...prop
   return (
     <>
       {arEnabled && (
-        <video
-          id="ar-video"
-          style={{
-            position: 'absolute',
-            width: '100%',
-            height: '100%',
-            top: 0,
-            left: 0,
-            objectFit: 'cover',
-          }}
-          ref={ref}
-          loop
-          autoPlay
-          muted
-          playsInline
-        ></video>
+        <>
+          <video
+            id="ar-video"
+            style={{
+              position: 'absolute',
+              width: '100%',
+              height: '100%',
+              top: 0,
+              left: 0,
+              objectFit: 'cover',
+            }}
+            ref={ref}
+            loop
+            autoPlay
+            muted
+            playsInline
+          />
+        </>
       )}
-      <Canvas camera={arEnabled ? { position: [0, 0, 0], near: -1000, far: 1000 } : props.camera} {...props}>
+      <Canvas
+        camera={arEnabled ? { position: [0, 0, 0], near: 100, far: 100000 } : props.camera}
+        {...props}
+        gl={{ alpha: true, antialias: true, precision: 'highp', logarithmicDepthBuffer: true }}
+      >
         <ARNftProvider video={ref} interpolationFactor={interpolationFactor} arEnabled={arEnabled}>
           {children}
         </ARNftProvider>

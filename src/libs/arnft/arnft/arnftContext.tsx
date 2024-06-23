@@ -1,6 +1,7 @@
-import React, { createContext, useMemo, useContext, useEffect, useRef, useState, useCallback } from 'react';
 import { useThree } from '@react-three/fiber';
+import { MutableRefObject, createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { ARNft } from './arnft';
+import QrScanner from 'qr-scanner';
 
 const constraints = {
   audio: false,
@@ -26,6 +27,26 @@ const ARNftProvider = ({ children, video, interpolationFactor, arEnabled }: any)
 
     setARNft(arnftRef.current as any);
   }, []);
+  const [, setQrOn] = useState<boolean>(true);
+  const scanner = useRef<QrScanner>();
+
+  // Result
+  // const [scannedResult, setScannedResult] = useState<string | undefined>('');
+
+  // Success
+  const onScanSuccess = (result: QrScanner.ScanResult) => {
+    // 🖨 Print the "result" to browser console.
+    console.log(result);
+    // ✅ Handle success.
+    // 😎 You can do whatever you want with the scanned result.
+    // setScannedResult(result?.data);
+  };
+
+  // Fail
+  const onScanFail = () => {
+    // 🖨 Print the "err" to browser console.
+    // console.log(err);
+  };
 
   useEffect(() => {
     async function init() {
@@ -59,7 +80,36 @@ const ARNftProvider = ({ children, video, interpolationFactor, arEnabled }: any)
 
     if (arEnabled) {
       init();
+
+      if ((video as MutableRefObject<HTMLVideoElement>)?.current && !scanner.current) {
+        // 👉 Instantiate the QR Scanner
+        scanner.current = new QrScanner((video as MutableRefObject<HTMLVideoElement>)?.current, onScanSuccess, {
+          onDecodeError: onScanFail,
+          // 📷 This is the camera facing mode. In mobile devices, "environment" means back camera and "user" means front camera.
+          preferredCamera: 'environment',
+          // 🖼 This will help us position our "QrFrame.svg" so that user can only scan when qr code is put in between our QrFrame.svg.
+          highlightScanRegion: false,
+          // 🔥 This will produce a yellow (default color) outline around the qr code that we scan, showing a proof that our qr-scanner is scanning that qr code.
+          highlightCodeOutline: false,
+        });
+
+        // 🚀 Start QR Scanner
+        scanner?.current
+          ?.start()
+          .then(() => setQrOn(true))
+          .catch((err) => {
+            if (err) setQrOn(false);
+          });
+      }
     }
+
+    // 🧹 Clean up on unmount.
+    // 🚨 This removes the QR Scanner from rendering and using camera when it is closed or removed from the UI.
+    return () => {
+      if (!(video as MutableRefObject<HTMLVideoElement>)?.current) {
+        scanner?.current?.stop();
+      }
+    };
   }, []);
 
   useEffect(() => {
@@ -96,4 +146,4 @@ const useNftMarker = (url: string) => {
   return ref as any;
 };
 
-export { ARNftProvider, useARNft, useNftMarker, ARNftContext };
+export { ARNftContext, ARNftProvider, useARNft, useNftMarker };
