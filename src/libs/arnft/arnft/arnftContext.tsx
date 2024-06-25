@@ -115,7 +115,7 @@ const ARNftProvider = ({ children, video, interpolationFactor, arEnabled }: any)
   }, []);
 
   useEffect(() => {
-    if (scannedResult) window.location.href = `https://haekwan1897.com/${scannedResult}`;
+    if (scannedResult) window.location.href = `https://haekwan1897.com/${'stamp'}`;
   }, [scannedResult]);
 
   // ❌ If "camera" is not allowed in browser permissions, show an alert.
