@@ -38,7 +38,7 @@ function ARCanvas({ arEnabled = true, interpolationFactor = 1, children, ...prop
       <Canvas
         camera={arEnabled ? { position: [0, 0, 0], near: 100, far: 100000 } : props.camera}
         {...props}
-        gl={{ alpha: true, antialias: true, precision: 'highp', logarithmicDepthBuffer: true }}
+        gl={{ alpha: true, antialias: true, precision: 'lowp', logarithmicDepthBuffer: true }}
       >
         <ARNftProvider video={ref} interpolationFactor={interpolationFactor} arEnabled={arEnabled}>
           {children}

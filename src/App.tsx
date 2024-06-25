@@ -1,8 +1,9 @@
 // import { ARCanvas, ARMarker } from '@artcom/react-three-arjs';
-import { Environment, useGLTF } from '@react-three/drei';
+import { BakeShadows, Environment, useGLTF } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { Suspense, useEffect, useRef } from 'react';
 import * as THREE from 'three';
+import { Effects } from './libs/arnft/arnft/components/Effects';
 import ARCanvas from './libs/arnft/arnft/components/arCanvas';
 import NFTMarker from './libs/arnft/arnft/components/nftMarker';
 import { requestCameraPermission } from './libs/util';
@@ -12,9 +13,8 @@ function Box() {
   const modelRef = useRef<THREE.Group>(null);
 
   useFrame(({ gl }) => {
-    gl.setSize(window.innerWidth, window.innerHeight);
+    if (gl) gl.setSize(window.innerWidth, window.innerHeight);
   });
-
   return (
     <>
       <NFTMarker url={'../data/marker/marker'}>
@@ -22,6 +22,7 @@ function Box() {
           <mesh scale={[100, 100, 100]} rotation-x={Math.PI / 3.8}>
             <primitive ref={modelRef} object={scene} />
           </mesh>
+          <BakeShadows />
         </Suspense>
       </NFTMarker>
     </>
@@ -41,7 +42,7 @@ export default function App() {
     >
       <Box />
       <Environment preset="warehouse" />
-      {/* <Effects /> */}
+      <Effects />
     </ARCanvas>
   );
 }
