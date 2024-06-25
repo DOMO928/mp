@@ -6,7 +6,6 @@ import * as THREE from 'three';
 import ARCanvas from './libs/arnft/arnft/components/arCanvas';
 import NFTMarker from './libs/arnft/arnft/components/nftMarker';
 import { requestCameraPermission } from './libs/util';
-import { Effects } from './libs/arnft/arnft/components/Effects';
 
 function Box() {
   const { scene } = useGLTF('data/mptest_o.glb');
@@ -20,7 +19,7 @@ function Box() {
     <>
       <NFTMarker url={'../data/marker/marker'}>
         <Suspense fallback={null}>
-          <mesh scale={[100, 100, 100]} position-z={0} rotation-x={Math.PI / 2}>
+          <mesh scale={[100, 100, 100]} rotation-x={Math.PI / 3.8}>
             <primitive ref={modelRef} object={scene} />
           </mesh>
         </Suspense>
@@ -42,7 +41,7 @@ export default function App() {
     >
       <Box />
       <Environment preset="warehouse" />
-      <Effects />
+      {/* <Effects /> */}
     </ARCanvas>
   );
 }
