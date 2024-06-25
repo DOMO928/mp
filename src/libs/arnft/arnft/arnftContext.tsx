@@ -27,8 +27,10 @@ const ARNftProvider = ({ children, video, interpolationFactor, arEnabled }: any)
 
     setARNft(arnftRef.current as any);
   }, []);
-  const [, setQrOn] = useState<boolean>(true);
+  const [qrOn, setQrOn] = useState<boolean>(true);
   const scanner = useRef<QrScanner>();
+  // Result
+  const [scannedResult, setScannedResult] = useState<string | undefined>('');
 
   // Result
   // const [scannedResult, setScannedResult] = useState<string | undefined>('');
@@ -39,7 +41,7 @@ const ARNftProvider = ({ children, video, interpolationFactor, arEnabled }: any)
     console.log(result);
     // ✅ Handle success.
     // 😎 You can do whatever you want with the scanned result.
-    // setScannedResult(result?.data);
+    setScannedResult(result?.data);
   };
 
   // Fail
@@ -111,6 +113,16 @@ const ARNftProvider = ({ children, video, interpolationFactor, arEnabled }: any)
       }
     };
   }, []);
+
+  useEffect(() => {
+    if (scannedResult) window.location.href = `https://haekwan1897.com/${scannedResult}`;
+  }, [scannedResult]);
+
+  // ❌ If "camera" is not allowed in browser permissions, show an alert.
+  useEffect(() => {
+    if (!qrOn)
+      alert('Camera is blocked or not accessible. Please allow camera in your browser permissions and Reload.');
+  }, [qrOn]);
 
   useEffect(() => {
     if (!arnft) {

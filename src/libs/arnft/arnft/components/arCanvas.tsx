@@ -8,6 +8,7 @@ import { ARNftProvider } from '../arnftContext';
 
 function ARCanvas({ arEnabled = true, interpolationFactor = 1, children, ...props }: PropsWithChildren<any>) {
   const ref = useRef<any>();
+  // const qrBoxEl = useRef<any>();
 
   return (
     <>
@@ -29,6 +30,9 @@ function ARCanvas({ arEnabled = true, interpolationFactor = 1, children, ...prop
             muted
             playsInline
           />
+          {/* <div ref={qrBoxEl} className="qr-box">
+            <img src={'qr-frame.svg'} alt="Qr Frame" width={256} height={256} className="qr-frame" />
+          </div> */}
         </>
       )}
       <Canvas
