@@ -20,7 +20,7 @@ function Box() {
     <>
       <NFTMarker url={'../data/marker/marker'}>
         <Suspense fallback={null}>
-          <mesh scale={[100, 100, 100]} position-z={10}>
+          <mesh scale={[100, 100, 100]} position-z={0} rotation-x={Math.PI / 2}>
             <primitive ref={modelRef} object={scene} />
           </mesh>
         </Suspense>
