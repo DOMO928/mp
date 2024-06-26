@@ -19,7 +19,7 @@ function Box() {
     <>
       <NFTMarker url={'../data/marker/marker'}>
         <Suspense fallback={null}>
-          <mesh scale={[100, 100, 100]} rotation-x={Math.PI / 4.2}>
+          <mesh scale={[100, 100, 100]} rotation-x={Math.PI / 4.5}>
             <primitive ref={modelRef} object={scene} />
           </mesh>
           <BakeShadows />
