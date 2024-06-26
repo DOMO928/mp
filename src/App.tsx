@@ -9,7 +9,7 @@ import NFTMarker from './libs/arnft/arnft/components/nftMarker';
 import { requestCameraPermission } from './libs/util';
 
 function Box() {
-  const { scene } = useGLTF('data/mptest_o.glb');
+  const { scene } = useGLTF('data/mp.glb');
   const modelRef = useRef<THREE.Group>(null);
 
   useFrame(({ gl }) => {
@@ -19,7 +19,7 @@ function Box() {
     <>
       <NFTMarker url={'../data/marker/marker'}>
         <Suspense fallback={null}>
-          <mesh scale={[100, 100, 100]} rotation-x={Math.PI / 3.8}>
+          <mesh scale={[100, 100, 100]} rotation-x={Math.PI / 4.2}>
             <primitive ref={modelRef} object={scene} />
           </mesh>
           <BakeShadows />
@@ -47,4 +47,4 @@ export default function App() {
   );
 }
 
-useGLTF.preload('data/mptest_o.glb');
+useGLTF.preload('data/mp.glb');

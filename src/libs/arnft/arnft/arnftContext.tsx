@@ -2,6 +2,7 @@ import { useThree } from '@react-three/fiber';
 import { MutableRefObject, createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { ARNft } from './arnft';
 import QrScanner from 'qr-scanner';
+import Cookies from 'js-cookie';
 
 const constraints = {
   audio: false,
@@ -31,9 +32,6 @@ const ARNftProvider = ({ children, video, interpolationFactor, arEnabled }: any)
   const scanner = useRef<QrScanner>();
   // Result
   const [scannedResult, setScannedResult] = useState<string | undefined>('');
-
-  // Result
-  // const [scannedResult, setScannedResult] = useState<string | undefined>('');
 
   // Success
   const onScanSuccess = (result: QrScanner.ScanResult) => {
@@ -115,7 +113,38 @@ const ARNftProvider = ({ children, video, interpolationFactor, arEnabled }: any)
   }, []);
 
   useEffect(() => {
-    if (scannedResult) window.location.href = `https://haekwan1897.com/${'stamp'}`;
+    if (scannedResult) {
+      if (scannedResult.indexOf('haekwan1897') > -1) {
+        var cookieStr = Cookies.get('HaekwanPlaces');
+        var num = scannedResult.replace('haekwan1897_00', '');
+        var date = new Date();
+        const expires = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59);
+        const cookieOpt = { expires: expires, domain: '.haekwan1897.com', path: '/' };
+
+        if (cookieStr) {
+          if (cookieStr.includes(num)) {
+            // cancelAnimationFrame(tickfunc);
+            Cookies.set('HaekwanPopup', 'already', cookieOpt);
+            window.location.href = `https://haekwan1897.com/${'stamp'}`;
+            return;
+          } else {
+            // cancelAnimationFrame(tickfunc);
+            Cookies.remove('HaekwanPlaces', cookieOpt);
+            Cookies.set('HaekwanPlaces', cookieStr + num + '', cookieOpt);
+            Cookies.set('HaekwanPopup', num + '', cookieOpt);
+            window.location.href = `https://haekwan1897.com/${'stamp'}`;
+            return;
+          }
+        } else {
+          Cookies.set('HaekwanPlaces', num, cookieOpt);
+          Cookies.set('HaekwanPopup', num + '', cookieOpt);
+          window.location.href = `https://haekwan1897.com/${'stamp'}`;
+          return;
+        }
+      } else {
+        alert('유효하지 않은 QR 코드입니다.');
+      }
+    }
   }, [scannedResult]);
 
   // ❌ If "camera" is not allowed in browser permissions, show an alert.
