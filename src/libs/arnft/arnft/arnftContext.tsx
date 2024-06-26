@@ -92,7 +92,7 @@ const ARNftProvider = ({ children, video, interpolationFactor, arEnabled }: any)
           // 🔥 This will produce a yellow (default color) outline around the qr code that we scan, showing a proof that our qr-scanner is scanning that qr code.
           highlightCodeOutline: false,
         });
-
+        scanner.current.$canvas.getContext('2d', { willReadFrequently: true });
         // 🚀 Start QR Scanner
         scanner?.current
           ?.start()

@@ -5,6 +5,7 @@
 import { Canvas } from '@react-three/fiber';
 import { PropsWithChildren, memo, useRef } from 'react';
 import { ARNftProvider } from '../arnftContext';
+import * as THREE from 'three';
 
 function ARCanvas({ arEnabled = true, interpolationFactor = 1, children, ...props }: PropsWithChildren<any>) {
   const ref = useRef<any>();
@@ -38,7 +39,13 @@ function ARCanvas({ arEnabled = true, interpolationFactor = 1, children, ...prop
       <Canvas
         camera={arEnabled ? { position: [0, 0, 0], near: 100, far: 100000 } : props.camera}
         {...props}
-        gl={{ alpha: true, antialias: true, precision: 'lowp', logarithmicDepthBuffer: true }}
+        gl={{
+          alpha: true,
+          antialias: true,
+          precision: 'lowp',
+          logarithmicDepthBuffer: true,
+          toneMapping: THREE.ACESFilmicToneMapping,
+        }}
       >
         <ARNftProvider video={ref} interpolationFactor={interpolationFactor} arEnabled={arEnabled}>
           {children}

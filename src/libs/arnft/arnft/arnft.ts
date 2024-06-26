@@ -45,7 +45,7 @@ export class ARNft {
     this.markers = [];
 
     this.canvasProcess = document.createElement('canvas');
-    this.contextProcess = this.canvasProcess.getContext('2d');
+    this.contextProcess = this.canvasProcess.getContext('2d', { willReadFrequently: true });
 
     this.initRenderer();
 
