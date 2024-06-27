@@ -1,4 +1,3 @@
-// import { ARCanvas, ARMarker } from '@artcom/react-three-arjs';
 import { BakeShadows, Environment, Merged, useGLTF } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { Suspense, createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
@@ -9,6 +8,7 @@ import ARCanvas from './libs/arnft/arnft/components/arCanvas';
 import { requestCameraPermission } from './libs/util';
 
 const context = createContext(undefined);
+
 export function Instances({ children, url, ...props }: any) {
   const { arEnabled } = useARNft();
   const ref = useNftMarker(url);
@@ -48,7 +48,8 @@ export function Instances({ children, url, ...props }: any) {
 function Box() {
   const modelRef = useRef<THREE.Group>(null);
   const instances: any = useContext(context);
-  const [ang, setAng] = useState(0);
+  const [ang, setAng] = useState<[number, number, number]>([0, 0, 0]);
+  const [pos, setPos] = useState<[number, number, number]>([0, 0, 0]);
 
   useFrame(({ gl, camera }) => {
     if (gl) {
@@ -70,6 +71,7 @@ function Box() {
         if (res) {
           const js = await res.json();
           setAng(js.angle);
+          setPos(js.position);
         }
       } catch (e) {
         console.log('ERROR', e);
@@ -78,9 +80,16 @@ function Box() {
 
     getData();
   }, []);
+
   return (
     <>
-      <group ref={modelRef} dispose={null} scale={[1.5, 1.5, 1.5]} position={[0, 1, 1]} rotation-x={ang || Math.PI / 5}>
+      <group
+        ref={modelRef}
+        dispose={null}
+        scale={[1.5, 1.5, 1.5]}
+        position={pos || [0, 1, 1]}
+        rotation={ang || [Math.PI / 5, 0, 0]}
+      >
         <instances.Blackmetal rotation={[Math.PI / 2, 0, 0]} />
         <instances.Block rotation={[Math.PI / 2, 0, 0]} />
         <instances.Brickwall rotation={[Math.PI / 2, 0, 0]} />
@@ -108,12 +117,7 @@ export default function App() {
     requestCameraPermission();
   }, []);
   return (
-    <ARCanvas
-      interpolationFactor={30}
-      // onCreated={({ gl }: any) => {
-      //   gl.setSize(window.innerWidth, window.innerHeight);
-      // }}
-    >
+    <ARCanvas interpolationFactor={30}>
       <Suspense fallback={null}>
         <Instances url={'../data/marker/marker'}>
           <Box />

@@ -17,38 +17,31 @@ const ARNftContext = createContext({});
 
 const ARNftProvider = ({ children, video, interpolationFactor, arEnabled }: any) => {
   const { gl, camera } = useThree();
-
   const [arnft, setARNft] = useState(null);
-
   const markersRef = useRef([]);
   const arnftRef = useRef<any>();
 
-  const onLoaded = useCallback((msg: any) => {
-    console.log('onLoaded', msg);
+  const onLoaded = useCallback(() =>
+    //msg: string
+    {
+      setARNft(arnftRef.current as any);
+    }, []);
 
-    setARNft(arnftRef.current as any);
-  }, []);
+  // QR 코드 관련 상태 초기화
   const [qrOn, setQrOn] = useState<boolean>(true);
   const scanner = useRef<QrScanner>();
-  // Result
   const [scannedResult, setScannedResult] = useState<string | undefined>('');
 
-  // Success
+  // QR 코드 인식 성공 콜백
   const onScanSuccess = (result: QrScanner.ScanResult) => {
-    // 🖨 Print the "result" to browser console.
-    console.log(result);
-    // ✅ Handle success.
-    // 😎 You can do whatever you want with the scanned result.
     setScannedResult(result?.data);
   };
 
-  // Fail
-  const onScanFail = () => {
-    // 🖨 Print the "err" to browser console.
-    // console.log(err);
-  };
+  // QR 코드 인식 실패 콜백
+  const onScanFail = () => {};
 
   useEffect(() => {
+    // AR 모드 초기화
     async function init() {
       const stream = await navigator.mediaDevices.getUserMedia(constraints);
       video.current.srcObject = stream;
@@ -81,6 +74,7 @@ const ARNftProvider = ({ children, video, interpolationFactor, arEnabled }: any)
     if (arEnabled) {
       init();
 
+      //video Element가 존재하고, QR 스캐너가 초기화 되지 않았을 경우 초기화 실행
       if ((video as MutableRefObject<HTMLVideoElement>)?.current && !scanner.current) {
         // 👉 Instantiate the QR Scanner
         scanner.current = new QrScanner((video as MutableRefObject<HTMLVideoElement>)?.current, onScanSuccess, {
@@ -113,6 +107,7 @@ const ARNftProvider = ({ children, video, interpolationFactor, arEnabled }: any)
   }, []);
 
   useEffect(() => {
+    // QR 코드 데이터가 변경, 확인된 경우
     if (scannedResult) {
       if (scannedResult.indexOf('haekwan1897') > -1) {
         var cookieStr = Cookies.get('HaekwanPlaces');
@@ -125,20 +120,20 @@ const ARNftProvider = ({ children, video, interpolationFactor, arEnabled }: any)
           if (cookieStr.includes(num)) {
             // cancelAnimationFrame(tickfunc);
             Cookies.set('HaekwanPopup', 'already', cookieOpt);
-            window.location.href = `https://haekwan1897.com/${'stamp'}`;
+            window.location.href = `https://haekwan1897.com/stamp`;
             return;
           } else {
             // cancelAnimationFrame(tickfunc);
             Cookies.remove('HaekwanPlaces', cookieOpt);
             Cookies.set('HaekwanPlaces', cookieStr + num + '', cookieOpt);
             Cookies.set('HaekwanPopup', num + '', cookieOpt);
-            window.location.href = `https://haekwan1897.com/${'stamp'}`;
+            window.location.href = `https://haekwan1897.com/stamp`;
             return;
           }
         } else {
           Cookies.set('HaekwanPlaces', num, cookieOpt);
           Cookies.set('HaekwanPopup', num + '', cookieOpt);
-          window.location.href = `https://haekwan1897.com/${'stamp'}`;
+          window.location.href = `https://haekwan1897.com/stamp`;
           return;
         }
       } else {
@@ -147,6 +142,7 @@ const ARNftProvider = ({ children, video, interpolationFactor, arEnabled }: any)
     }
   }, [scannedResult]);
 
+  // QR 스캐너가 작동하지 않을 경우
   // ❌ If "camera" is not allowed in browser permissions, show an alert.
   useEffect(() => {
     if (!qrOn)
