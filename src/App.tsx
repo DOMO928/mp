@@ -6,6 +6,7 @@ import { useARNft, useNftMarker } from './libs/arnft/arnft/arnftContext';
 import { Effects } from './libs/arnft/arnft/components/Effects';
 import ARCanvas from './libs/arnft/arnft/components/arCanvas';
 import { requestCameraPermission } from './libs/util';
+import Back from './assets/icons/Back';
 
 const context = createContext(undefined);
 
@@ -117,15 +118,34 @@ export default function App() {
     requestCameraPermission();
   }, []);
   return (
-    <ARCanvas interpolationFactor={30}>
-      <Suspense fallback={null}>
-        <Instances url={'../data/marker/marker'}>
-          <Box />
-        </Instances>
-        <Environment preset="park" />
-        <Effects />
-      </Suspense>
-    </ARCanvas>
+    <>
+      <button
+        style={{
+          zIndex: 999,
+          position: 'fixed',
+          width: 'fit-content',
+          height: 'fit-content',
+          border: 0,
+          backgroundColor: 'transparent',
+          padding: '1rem',
+        }}
+        onClick={() => {
+          window.history.back();
+        }}
+      >
+        <Back style={{}} />
+      </button>
+
+      <ARCanvas interpolationFactor={30}>
+        <Suspense fallback={null}>
+          <Instances url={'../data/marker/marker'}>
+            <Box />
+          </Instances>
+          <Environment preset="park" />
+          <Effects />
+        </Suspense>
+      </ARCanvas>
+    </>
   );
 }
 
